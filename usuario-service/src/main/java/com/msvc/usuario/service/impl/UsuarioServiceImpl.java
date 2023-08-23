@@ -4,6 +4,7 @@ import com.msvc.usuario.entities.Calificacion;
 import com.msvc.usuario.entities.Hotel;
 import com.msvc.usuario.entities.Usuario;
 import com.msvc.usuario.exceptions.ResourceNotFoundException;
+import com.msvc.usuario.external.HotelService;
 import com.msvc.usuario.repository.UsuarioRepository;
 import com.msvc.usuario.service.UsuarioService;
 import org.slf4j.Logger;
@@ -22,6 +23,9 @@ import java.util.stream.Collectors;
 public class UsuarioServiceImpl implements UsuarioService {
 
     private Logger logger = LoggerFactory.getLogger(UsuarioService.class);
+
+    @Autowired
+    private HotelService hotelService;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -45,9 +49,27 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Usuario getUsuario(String usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con el ID : " + usuarioId));
-        ArrayList<Calificacion> calificacionesDelUsuario = restTemplate.getForObject("http://localhost:8083/calificaciones/usuarios/"+usuario.getUsuarioId(),ArrayList.class);
+
+        Calificacion[] calificacionesDelUsuario = restTemplate.getForObject("http://CALIFICACION-SERVICE/calificaciones/usuarios/"+usuario.getUsuarioId(),Calificacion[].class);
         logger.info("{}",calificacionesDelUsuario);
-        usuario.setCalificaciones(calificacionesDelUsuario);
+
+        List<Calificacion> calificaciones = Arrays.stream(calificacionesDelUsuario).collect(Collectors.toList());
+
+        List<Calificacion> listaCalificaciones = calificaciones.stream().map(calificacion -> {
+            System.out.println(calificacion.getHotelId());
+            //ResponseEntity<Hotel> forEntity = restTemplate.getForEntity("http://HOTEL-SERVICE/hoteles/"+calificacion.getHotelId(),Hotel.class);
+
+            Hotel hotel = hotelService.getHotel(calificacion.getHotelId());
+
+            //logger.info("Respuesta con codigo de estado : {}",forEntity.getStatusCode());
+
+            calificacion.setHotel(hotel);
+
+            return calificacion;
+        }).collect(Collectors.toList());
+
+        usuario.setCalificaciones(listaCalificaciones);
+
         return usuario;
     }
 }
