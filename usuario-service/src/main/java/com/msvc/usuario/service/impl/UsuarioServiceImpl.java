@@ -4,7 +4,7 @@ import com.msvc.usuario.entities.Calificacion;
 import com.msvc.usuario.entities.Hotel;
 import com.msvc.usuario.entities.Usuario;
 import com.msvc.usuario.exceptions.ResourceNotFoundException;
-import com.msvc.usuario.external.HotelService;
+import com.msvc.usuario.external.services.HotelService;
 import com.msvc.usuario.repository.UsuarioRepository;
 import com.msvc.usuario.service.UsuarioService;
 import org.slf4j.Logger;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -25,13 +24,13 @@ public class UsuarioServiceImpl implements UsuarioService {
     private Logger logger = LoggerFactory.getLogger(UsuarioService.class);
 
     @Autowired
-    private HotelService hotelService;
-
-    @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private HotelService hotelService;
 
     @Override
     public Usuario saveUsuario(Usuario usuario) {

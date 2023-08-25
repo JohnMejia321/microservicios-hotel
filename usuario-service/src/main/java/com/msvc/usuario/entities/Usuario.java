@@ -6,10 +6,12 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "usuarios")
 public class Usuario {
 
@@ -28,14 +30,6 @@ public class Usuario {
 
     @Transient
     private List<Calificacion> calificaciones = new ArrayList<>();
-
-    public List<Calificacion> getCalificaciones() {
-        return calificaciones;
-    }
-
-    public void setCalificaciones(List<Calificacion> calificaciones) {
-        this.calificaciones = calificaciones;
-    }
 
     public String getUsuarioId() {
         return usuarioId;
@@ -67,5 +61,13 @@ public class Usuario {
 
     public void setInformacion(String informacion) {
         this.informacion = informacion;
+    }
+
+    public List<Calificacion> getCalificaciones() {
+        return calificaciones;
+    }
+
+    public void setCalificaciones(List<Calificacion> calificaciones) {
+        this.calificaciones = calificaciones;
     }
 }

@@ -1,5 +1,4 @@
-package com.msvc.usuario.external;
-
+package com.msvc.usuario.external.services;
 
 import com.msvc.usuario.entities.Calificacion;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -15,8 +14,9 @@ public interface CalificacionService {
     public ResponseEntity<Calificacion> guardarCalificacion(Calificacion calificacion);
 
     @PostMapping("/calificaciones/{calificacionId}")
-    public ResponseEntity<Calificacion> actualizarCalificacion(@PathVariable String calificacionId, Calificacion calificacion);
+    public ResponseEntity<Calificacion> actualizarCalificacion(@PathVariable String calificacionId,Calificacion calificacion);
 
     @DeleteMapping("/calificaciones/{calificacionId}")
     public void eliminarCalificacion(@PathVariable String calificacionId);
+
 }
